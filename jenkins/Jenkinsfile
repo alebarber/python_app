@@ -1,38 +1,40 @@
 pipeline {
-    agent any  // Usa cualquier nodo disponible para ejecutar el pipeline
+    agent any
 
     stages {
         stage('Build') {
             agent {
                 docker {
-                    image 'python:2-alpine'  // La imagen Docker que usarás en esta etapa
-                    args '-v /var/run/docker.sock:/var/run/docker.sock'  // Montaje de Docker socket, si es necesario
+                    image 'python:2-alpine'
+                    args '-u root -v /var/run/docker.sock:/var/run/docker.sock'
                 }
             }
             steps {
-                script {
-                    // Aquí se compilan los archivos Python, adaptado a tu caso
-                    sh 'python -m py_compile sources/add2vals.py sources/calc.py'
-                }
+                // Verificar la versión de Python y Docker dentro del contenedor
+                sh 'python --version'
+                sh 'docker --version'
+
+                // Aquí podrías agregar los comandos de instalación de dependencias o compilación
+                // Ejemplo: instalar requerimientos
+                sh 'pip install -r requirements.txt'
             }
         }
 
         stage('Test') {
             agent {
                 docker {
-                    image 'qnib/pytest'  // Imagen Docker para ejecutar las pruebas
-                    args '-v /var/run/docker.sock:/var/run/docker.sock'  // Montaje de Docker socket
+                    image 'qnib/pytest'
+                    args '-u root -v /var/run/docker.sock:/var/run/docker.sock'
                 }
             }
             steps {
-                script {
-                    // Ejecuta las pruebas con pytest
-                    sh 'py.test --verbose --junit-xml test-reports/results.xml sources/test_calc.py'
-                }
+                // Aquí llamas a tus pruebas, ajustando la ruta si es necesario
+                sh 'py.test --verbose --junit-xml test-reports/results.xml sources/test_calc.py'
             }
             post {
                 always {
-                    junit '**/test-reports/*.xml'  // Publica los resultados de las pruebas
+                    // Archivar los resultados de las pruebas
+                    junit '**/test-reports/*.xml'
                 }
             }
         }
@@ -40,19 +42,17 @@ pipeline {
         stage('Deliver') {
             agent {
                 docker {
-                    image 'cdrx/pyinstaller-linux:python2'  // Imagen Docker para empaquetar el ejecutable
-                    args '-v /var/run/docker.sock:/var/run/docker.sock'  // Montaje de Docker socket
+                    image 'cdrx/pyinstaller-linux:python2'
+                    args '-u root -v /var/run/docker.sock:/var/run/docker.sock'
                 }
             }
             steps {
-                script {
-                    // Empaqueta la aplicación Python en un archivo ejecutable
-                    sh 'pyinstaller --onefile sources/add2vals.py'
-                }
+                // Comando para empaquetar el archivo Python con PyInstaller
+                sh 'pyinstaller --onefile sources/add2vals.py'
             }
             post {
                 success {
-                    // Archiva el artefacto generado
+                    // Archivar el artefacto generado
                     archiveArtifacts 'dist/add2vals'
                 }
             }
