@@ -43,22 +43,33 @@ pipeline {
         stage('Deliver') {
             agent {
                 docker {
-                    image 'cdrx/pyinstaller-linux:python2'  // Imagen Docker para empaquetar el ejecutable
-                    args '-v /var/run/docker.sock:/var/run/docker.sock'  // Montaje de Docker socket
+                    image 'cdrx/pyinstaller-linux:python2'
+                    args '-u root -v /var/run/docker.sock:/var/run/docker.sock'
                 }
             }
             steps {
-                script {
-                    // Empaqueta la aplicación Python en un archivo ejecutable
-                    sh 'pyinstaller --onefile sources/add2vals.py'
-                }
-            }
-            post {
-                success {
-                    // Archiva el artefacto generado
-                    archiveArtifacts 'dist/add2vals'
-                }
+                sh '''
+                    echo "Iniciando contenedor..."
+                    
+                    # Verificar que PyInstaller esté instalado
+                    pyinstaller --version
+                    
+                    # Compilar el ejecutable
+                    cd sources
+                    pyinstaller --onefile add2vals.py
+                    
+                    # Verificar que se haya creado el ejecutable
+                    ls dist/add2vals
+                    
+                    # Copiar el ejecutable al directorio de trabajo
+                    cp dist/add2vals ../add2vals
+                    
+                    echo "Ejecutable compilado correctamente."
+                '''
+                
+                // Archivar los artefactos
+                archiveArtifacts artifacts: 'sources/dist/add2vals'
             }
         }
-    }
-}
+    }  // Cierre de stages
+}  // Cierre de pipeline
