@@ -1,0 +1,32 @@
+Manifest-Version: 1.0
+Created-By: Maven Archiver 3.6.0
+Build-Jdk-Spec: 17
+Specification-Title: Bitbucket Branch Source Plugin
+Specification-Version: 0.0
+Implementation-Title: Bitbucket Branch Source Plugin
+Implementation-Version: 922.va_71d0e0b_7b_8d
+Group-Id: org.jenkins-ci.plugins
+Artifact-Id: cloudbees-bitbucket-branch-source
+Short-Name: cloudbees-bitbucket-branch-source
+Long-Name: Bitbucket Branch Source Plugin
+Url: https://github.com/jenkinsci/bitbucket-branch-source-plugin
+Compatible-Since-Version: 2.0
+Plugin-Version: 922.va_71d0e0b_7b_8d
+Hudson-Version: 2.479.1
+Jenkins-Version: 2.479.1
+Plugin-Dependencies: apache-httpcomponents-client-4-api:4.5.14-208.v4383
+ 51942757,authentication-tokens:1.119.v50285141b_7e1,display-url-api:2.2
+ 09.v582ed814ff2f,git:5.6.0,handy-uri-templates-2-api:2.1.8-30.v7e777411
+ b_148,jackson2-api:2.17.0-379.v02de8ec9f64c,plain-credentials:183.va_de
+ 8f1dd5a_2b_,scm-api:698.v8e3b_c788f0a_6,structs:338.v848422169819
+Plugin-Developers: Antonio Muniz:amuniz:,Bobby Sandell:rsandell:,Vivek P
+ andey:vivek:,Joseph Petersen:casz:
+Plugin-License-Name: MIT License
+Plugin-License-Url: https://opensource.org/licenses/MIT
+Plugin-ScmConnection: scm:git:https://github.com/jenkinsci/bitbucket-bra
+ nch-source-plugin.git
+Plugin-ScmTag: a71d0e0b7b8db8df8b4eff1c0d6044f7d75458c8
+Plugin-ScmUrl: https://github.com/jenkinsci/bitbucket-branch-source-plug
+ in
+Implementation-Build: a71d0e0b7b8db8df8b4eff1c0d6044f7d75458c8
+
