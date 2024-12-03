@@ -43,13 +43,22 @@ pipeline {
         stage('Deliver') {
             agent {
                 docker {
-                    image 'cdrx/pyinstaller-linux:python2'
+                    image 'ubuntu:20.04'  // Usamos Ubuntu como base
                     args '-u root -v /var/run/docker.sock:/var/run/docker.sock'
                 }
             }
             steps {
                 sh '''
                     echo "Iniciando contenedor..."
+                    
+                    # Actualizar paquetes
+                    apt-get update
+                    
+                    # Instalar dependencias necesarias
+                    apt-get install -y python3 python3-pip
+                    
+                    # Instalar PyInstaller
+                    pip3 install pyinstaller
                     
                     # Verificar que PyInstaller esté instalado
                     pyinstaller --version
